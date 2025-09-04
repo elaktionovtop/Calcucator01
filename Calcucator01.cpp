@@ -8,10 +8,20 @@ void errorMessage(const string& message);
 double compute(double a, double b, const string& op);
 double factorial(int a);
 double sinOfDegrees(double a);
+bool runCommand();
 
 int main() {
     setlocale(LC_ALL, "ru");
+    while (runCommand())
+        println();
 
+    print("Нажми Enter, чтобы закрыть окно");
+    cin.get();
+    return 0;
+}
+
+ bool runCommand()
+ {
     double a = 0;
     double b = 0;
     double result = 0;
@@ -19,22 +29,26 @@ int main() {
     std::print("Введи первое число: ");
     if (!(cin >> a)) {
         errorMessage("Ошибка: введено не число");
-        cin.get();
-        return 1;
+        return true;
     }
 
     std::string op;
-    std::string allowed[] = { "+", "-", "*", "/", "^", "!", "sin" };
+    std::string allowed[] = { "+", "-", "*", "/", "^", "!", "sin", "end"};
 
-    std::print("Введи операцию (+ - * / ^ ! sin): ");
+    std::print("Введи операцию (+ - * / ^ ! sin end): ");
     cin >> op;
 
     if (std::find(std::begin(allowed), std::end(allowed), op)
         == std::end(allowed)) {
         errorMessage("Ошибка: неизвестная операция");
-        cin.get();
-        return 1;
+        return true;
     }
+
+    if (op == "end") {
+        cin.get();
+        return false;
+    }
+
 
     if (op == "!") {
         result = factorial((int)a);
@@ -46,8 +60,7 @@ int main() {
         std::print("Введи второе число: ");
         if (!(cin >> b)) {
             errorMessage("Ошибка: введено не число");
-            cin.get();
-            return 1;
+            return true;
         }
         result = compute(a, b, op);
     }
@@ -69,9 +82,8 @@ int main() {
     }
 
     cin.get();
-    cin.get();
-    return 0;
-}
+    return true;
+ }
 
 void errorMessage(const string& message)
 {
